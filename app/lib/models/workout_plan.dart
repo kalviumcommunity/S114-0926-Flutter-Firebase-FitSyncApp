@@ -60,6 +60,34 @@ class Exercise {
       'defaultWeight': defaultWeight,
     };
   }
+
+  Exercise copyWith({
+    String? id,
+    String? name,
+    ExerciseType? type,
+    String? description,
+    String? videoUrl,
+    String? imageUrl,
+    List<String>? muscleGroups,
+    int? defaultSets,
+    int? defaultReps,
+    int? defaultDurationSeconds,
+    double? defaultWeight,
+  }) {
+    return Exercise(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      description: description ?? this.description,
+      videoUrl: videoUrl ?? this.videoUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
+      muscleGroups: muscleGroups ?? this.muscleGroups,
+      defaultSets: defaultSets ?? this.defaultSets,
+      defaultReps: defaultReps ?? this.defaultReps,
+      defaultDurationSeconds: defaultDurationSeconds ?? this.defaultDurationSeconds,
+      defaultWeight: defaultWeight ?? this.defaultWeight,
+    );
+  }
 }
 
 class WorkoutExercise {
@@ -111,6 +139,30 @@ class WorkoutExercise {
       'order': order,
       'notes': notes,
     };
+  }
+
+  WorkoutExercise copyWith({
+    String? exerciseId,
+    String? exerciseName,
+    int? sets,
+    int? reps,
+    int? durationSeconds,
+    double? weight,
+    int? restSeconds,
+    int? order,
+    String? notes,
+  }) {
+    return WorkoutExercise(
+      exerciseId: exerciseId ?? this.exerciseId,
+      exerciseName: exerciseName ?? this.exerciseName,
+      sets: sets ?? this.sets,
+      reps: reps ?? this.reps,
+      durationSeconds: durationSeconds ?? this.durationSeconds,
+      weight: weight ?? this.weight,
+      restSeconds: restSeconds ?? this.restSeconds,
+      order: order ?? this.order,
+      notes: notes ?? this.notes,
+    );
   }
 }
 
@@ -190,4 +242,34 @@ class WorkoutPlan {
         final setTime = ex.durationSeconds ?? (ex.reps * 5);
         return total + (ex.sets * (setTime + ex.restSeconds));
       }) ~/ 60;
+
+  WorkoutPlan copyWith({
+    String? id,
+    String? trainerId,
+    String? trainerName,
+    String? name,
+    String? description,
+    List<WorkoutExercise>? exercises,
+    WorkoutPlanStatus? status,
+    List<String>? assignedMemberIds,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? scheduledStartDate,
+    int? durationWeeks,
+  }) {
+    return WorkoutPlan(
+      id: id ?? this.id,
+      trainerId: trainerId ?? this.trainerId,
+      trainerName: trainerName ?? this.trainerName,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      exercises: exercises ?? this.exercises,
+      status: status ?? this.status,
+      assignedMemberIds: assignedMemberIds ?? this.assignedMemberIds,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      scheduledStartDate: scheduledStartDate ?? this.scheduledStartDate,
+      durationWeeks: durationWeeks ?? this.durationWeeks,
+    );
+  }
 }

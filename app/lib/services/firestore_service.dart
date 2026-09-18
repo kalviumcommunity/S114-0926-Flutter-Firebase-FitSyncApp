@@ -362,3 +362,27 @@ extension MemberAssignmentCopyWith on MemberAssignment {
 
 // Providers
 final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
+
+final exercisesStreamProvider = StreamProvider<List<Exercise>>((ref) {
+  return ref.watch(firestoreServiceProvider).watchExercises();
+});
+
+final trainerWorkoutPlansProvider = StreamProvider.family<List<WorkoutPlan>, String>((ref, trainerId) {
+  return ref.watch(firestoreServiceProvider).watchTrainerWorkoutPlans(trainerId);
+});
+
+final memberWorkoutPlansProvider = StreamProvider.family<List<WorkoutPlan>, String>((ref, memberId) {
+  return ref.watch(firestoreServiceProvider).watchMemberWorkoutPlans(memberId);
+});
+
+final memberProgressLogsProvider = StreamProvider.family<List<ProgressLog>, String>((ref, memberId) {
+  return ref.watch(firestoreServiceProvider).watchMemberProgressLogs(memberId, limit: 50);
+});
+
+final trainerMemberProgressLogsProvider = StreamProvider.family<List<ProgressLog>, String>((ref, trainerId) {
+  return ref.watch(firestoreServiceProvider).watchTrainerMemberProgressLogs(trainerId, limit: 100);
+});
+
+final branchesStreamProvider = StreamProvider<List<Branch>>((ref) {
+  return ref.watch(firestoreServiceProvider).watchBranches();
+});

@@ -8,6 +8,16 @@ import 'features/auth/login_screen.dart';
 import 'features/auth/register_screen.dart';
 import 'features/auth/forgot_password_screen.dart';
 import 'features/shared/home_screen.dart';
+import 'features/trainer/trainer_dashboard.dart';
+import 'features/trainer/create_workout_plan_screen.dart';
+import 'features/trainer/member_progress_screen.dart';
+import 'features/shared/member_dashboard.dart';
+import 'features/shared/workout_detail_screen.dart';
+import 'features/shared/log_workout_screen.dart';
+import 'features/admin/admin_dashboard.dart';
+import 'features/admin/branch_management_screen.dart';
+import '../../models/user.dart';
+import '../../models/workout_plan.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +47,49 @@ final _router = GoRouter(
     GoRoute(
       path: '/home',
       builder: (context, state) => const HomeScreen(),
+    ),
+    // Trainer routes
+    GoRoute(
+      path: '/trainer/create-plan',
+      builder: (context, state) {
+        final plan = state.extra as WorkoutPlan?;
+        return CreateWorkoutPlanScreen(existingPlan: plan);
+      },
+    ),
+    GoRoute(
+      path: '/trainer/member-progress',
+      builder: (context, state) {
+        final member = state.extra as AppUser;
+        return MemberProgressScreen(member: member);
+      },
+    ),
+    // Member routes
+    GoRoute(
+      path: '/member/workout/:planId',
+      builder: (context, state) {
+        final planId = state.pathParameters['planId']!;
+        return WorkoutDetailScreen(planId: planId);
+      },
+    ),
+    GoRoute(
+      path: '/member/log-workout',
+      builder: (context, state) {
+        final planId = state.uri.queryParameters['planId'];
+        return LogWorkoutScreen(planId: planId);
+      },
+    ),
+    // Admin routes
+    GoRoute(
+      path: '/admin/branches/new',
+      builder: (context, state) => const BranchManagementScreen(),
+    ),
+    GoRoute(
+      path: '/admin/branches/:branchId',
+      builder: (context, state) {
+        final branchId = state.pathParameters['branchId']!;
+        // TODO: Load branch and pass to screen
+        return const BranchManagementScreen();
+      },
     ),
   ],
 );

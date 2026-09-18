@@ -3,7 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/user.dart';
+import '../../models/workout_plan.dart';
 import '../../services/auth_service.dart';
+import '../../services/firestore_service.dart';
+import '../trainer/trainer_dashboard.dart';
+import 'member_dashboard.dart';
+import 'workout_detail_screen.dart';
+import 'log_workout_screen.dart';
+import '../admin/admin_dashboard.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -40,105 +47,6 @@ class HomeScreen extends ConsumerWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-// Role-specific dashboards
-class TrainerDashboard extends ConsumerWidget {
-  const TrainerDashboard({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Trainer Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authServiceProvider).signOut(),
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.fitness_center, size: 80, color: Colors.green),
-            SizedBox(height: 16),
-            Text('Trainer Dashboard', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            Text('Manage workout plans and track member progress'),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/trainer/create-plan'),
-        icon: const Icon(Icons.add),
-        label: const Text('Create Plan'),
-      ),
-    );
-  }
-}
-
-class MemberDashboard extends ConsumerWidget {
-  const MemberDashboard({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Workouts'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authServiceProvider).signOut(),
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.directions_run, size: 80, color: Colors.blue),
-            SizedBox(height: 16),
-            Text('Member Dashboard', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            Text('View your workout plans and log progress'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class AdminDashboard extends ConsumerWidget {
-  const AdminDashboard({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authServiceProvider).signOut(),
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.admin_panel_settings, size: 80, color: Colors.orange),
-            SizedBox(height: 16),
-            Text('Admin Dashboard', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            Text('Manage branches, trainers, and view analytics'),
-          ],
         ),
       ),
     );
