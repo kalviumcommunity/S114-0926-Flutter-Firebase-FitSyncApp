@@ -14,6 +14,10 @@ import 'features/trainer/member_progress_screen.dart';
 import 'features/shared/member_dashboard.dart';
 import 'features/shared/workout_detail_screen.dart';
 import 'features/shared/log_workout_screen.dart';
+import 'features/shared/profile_screen.dart';
+import 'features/admin/analytics_dashboard_screen.dart';
+import 'features/admin/seed_exercises_screen.dart';
+import 'features/admin/member_transfer_screen.dart';
 import 'features/admin/admin_dashboard.dart';
 import 'features/admin/branch_management_screen.dart';
 import '../../models/user.dart';
@@ -87,9 +91,28 @@ final _router = GoRouter(
       path: '/admin/branches/:branchId',
       builder: (context, state) {
         final branchId = state.pathParameters['branchId']!;
-        // TODO: Load branch and pass to screen
         return const BranchManagementScreen();
       },
+    ),
+    GoRoute(
+      path: '/admin/analytics',
+      builder: (context, state) => const AnalyticsDashboardScreen(),
+    ),
+    GoRoute(
+      path: '/admin/seed-exercises',
+      builder: (context, state) => const SeedExercisesScreen(),
+    ),
+    GoRoute(
+      path: '/admin/transfer-member',
+      builder: (context, state) {
+        final member = state.extra as AppUser;
+        return MemberTransferScreen(member: member);
+      },
+    ),
+    // Profile route
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const ProfileScreen(),
     ),
   ],
 );

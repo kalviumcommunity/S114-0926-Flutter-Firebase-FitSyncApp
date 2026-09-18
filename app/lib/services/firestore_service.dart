@@ -33,21 +33,6 @@ class FirestoreService {
     await _users.doc(user.uid).update(user.toFirestore());
   }
 
-  Future<List<AppUser>> getTrainers({String? branchId}) async {
-    Query query = _users.where('role', isEqualTo: 'trainer').where('isActive', isEqualTo: true);
-    if (branchId != null) query = query.where('branchId', isEqualTo: branchId);
-    final snapshot = await query.get();
-    return snapshot.docs.map((doc) => AppUser.fromFirestore(doc)).toList();
-  }
-
-  Future<List<AppUser>> getMembers({String? trainerId, String? branchId}) async {
-    Query query = _users.where('role', isEqualTo: 'member').where('isActive', isEqualTo: true);
-    if (trainerId != null) query = query.where('trainerId', isEqualTo: trainerId);
-    if (branchId != null) query = query.where('branchId', isEqualTo: branchId);
-    final snapshot = await query.get();
-    return snapshot.docs.map((doc) => AppUser.fromFirestore(doc)).toList();
-  }
-
   // ========== WORKOUT PLAN OPERATIONS ==========
 
   Future<WorkoutPlan> createWorkoutPlan(WorkoutPlan plan) async {
@@ -290,6 +275,28 @@ class FirestoreService {
       batch.set(doc, exercise.toFirestore());
     }
     await batch.commit();
+  }
+
+  Future<void> updateUserProfile(String uid, Map<String, dynamic> data) async {
+    await _users.doc(uid).update({
+      ...data,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<List<AppUser>> getTrainers({String? branchId}) async {
+    Query query = _users.where('role', isEqualTo: 'trainer').where('isActive', isEqualTo: true);
+    if (branchId != null) query = query.where('branchId', isEqualTo: branchId);
+    final snapshot = await query.get();
+    return snapshot.docs.map((doc) => AppUser.fromFirestore(doc)).toList();
+  }
+
+  Future<List<AppUser>> getMembers({String? trainerId, String? branchId}) async {
+    Query query = _users.where('role', isEqualTo: 'member').where('isActive', isEqualTo: true);
+    if (trainerId != null) query = query.where('trainerId', isEqualTo: trainerId);
+    if (branchId != null) query = query.where('branchId', isEqualTo: branchId);
+    final snapshot = await query.get();
+    return snapshot.docs.map((doc) => AppUser.fromFirestore(doc)).toList();
   }
 }
 
