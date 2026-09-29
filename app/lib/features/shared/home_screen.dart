@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../models/user.dart';
-import '../../models/workout_plan.dart';
 import '../../services/auth_service.dart';
-import '../../services/firestore_service.dart';
 import '../trainer/trainer_dashboard.dart';
 import 'member_dashboard.dart';
-import 'workout_detail_screen.dart';
-import 'log_workout_screen.dart';
 import '../admin/admin_dashboard.dart';
 
 class HomeScreen extends ConsumerWidget {

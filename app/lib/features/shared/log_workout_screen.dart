@@ -302,7 +302,7 @@ class _ExerciseLogCard extends StatelessWidget {
                   label: Text('$completedCount/${sets.length} sets',
                       style: const TextStyle(fontSize: 12)),
                   backgroundColor: completedCount == sets.length
-                      ? Colors.green.withOpacity(0.1)
+                      ? Colors.green.withValues(alpha: 0.1)
                       : Theme.of(context).colorScheme.surfaceContainerHighest,
                   labelStyle: TextStyle(
                       color: completedCount == sets.length ? Colors.green : null),

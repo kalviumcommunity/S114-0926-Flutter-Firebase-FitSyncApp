@@ -163,7 +163,7 @@ class _PlanCard extends ConsumerWidget {
                 Chip(
                   label: Text(plan.status.name.toUpperCase(),
                       style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
-                  backgroundColor: statusColor.withOpacity(0.1),
+                  backgroundColor: statusColor.withValues(alpha: 0.1),
                   side: BorderSide(color: statusColor),
                   labelStyle: TextStyle(color: statusColor),
                 ),

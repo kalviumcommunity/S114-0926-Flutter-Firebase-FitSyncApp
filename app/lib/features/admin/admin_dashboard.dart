@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../models/user.dart';
 import '../../models/branch.dart';
 import '../../services/auth_service.dart';
 import '../../services/firestore_service.dart';
-import 'branch_management_screen.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
   const AdminDashboard({super.key});

@@ -128,7 +128,7 @@ class _LogTile extends StatelessWidget {
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: iconColor.withOpacity(0.15),
+        backgroundColor: iconColor.withValues(alpha: 0.15),
         child: Icon(iconData, color: iconColor, size: 20),
       ),
       title: Text(_getLogTitle(log)),
@@ -137,7 +137,7 @@ class _LogTile extends StatelessWidget {
           ? Chip(
               label: Text('${log.difficultyRating}/10',
                   style: const TextStyle(fontSize: 11)),
-              backgroundColor: _getDifficultyColor(log.difficultyRating!).withOpacity(0.2),
+              backgroundColor: _getDifficultyColor(log.difficultyRating!).withValues(alpha: 0.2),
             )
           : null,
     );

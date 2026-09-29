@@ -1,0 +1,181 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getUserData(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data;
+    }
+
+    function getUserRole(userId) {
+      return getUserData(userId).role;
+    }
+
+    function getUserTrainer(userId) {
+      return getUserData(userId).trainerId;
+    }
+
+    function isAdmin(userId) {
+      return getUserRole(userId) == 'admin';
+    }
+
+    function isTrainer(userId) {
+      return getUserRole(userId) == 'trainer';
+    }
+
+    function isMember(userId) {
+      return getUserRole(userId) == 'member';
+    }
+
+    function isOwnDocument(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isAssignedTrainer(memberId) {
+      return getUserTrainer(memberId) == request.auth.uid;
+    }
+
+    // ===========================================
+    // USERS COLLECTION
+    // ===========================================
+    match /users/{userId} {
+      // Read: Users can read their own profile, trainers can read assigned members, admins read all
+      allow read: if isSignedIn() && (
+        isOwnDocument(userId) ||
+        (isTrainer(request.auth.uid) && isAssignedTrainer(userId)) ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Write: Users can update own profile (limited fields), admins full write
+      allow update: if isSignedIn() && (
+        (isOwnDocument(userId) && 
+          request.resource.data.keys().hasOnly(['displayName', 'phoneNumber', 'heightCm', 'weightKg', 'fitnessGoal', 'avatarUrl']) &&
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.trainerId == resource.data.trainerId &&
+          request.resource.data.branchId == resource.data.branchId) ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Create: Only admins can create users (via registration flow with custom claims)
+      allow create: if isSignedIn() && isAdmin(request.auth.uid);
+
+      // Delete: Only admins
+      allow delete: if isSignedIn() && isAdmin(request.auth.uid);
+    }
+
+    // ===========================================
+    // WORKOUT PLANS COLLECTION
+    // ===========================================
+    match /workoutPlans/{planId} {
+      // Read: Trainers read own plans, members read assigned plans, admins read all
+      allow read: if isSignedIn() && (
+        isTrainer(request.auth.uid) && resource.data.trainerId == request.auth.uid ||
+        isMember(request.auth.uid) && request.auth.uid in resource.data.assignedMemberIds ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Create: Only trainers (for their own plans) and admins
+      allow create: if isSignedIn() && (
+        (isTrainer(request.auth.uid) && request.resource.data.trainerId == request.auth.uid) ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Update: Trainers update own plans, admins full access
+      allow update: if isSignedIn() && (
+        (isTrainer(request.auth.uid) && resource.data.trainerId == request.auth.uid) ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Delete: Trainers delete own plans, admins
+      allow delete: if isSignedIn() && (
+        (isTrainer(request.auth.uid) && resource.data.trainerId == request.auth.uid) ||
+        isAdmin(request.auth.uid)
+      );
+    }
+
+    // ===========================================
+    // PROGRESS LOGS COLLECTION
+    // ===========================================
+    match /progressLogs/{logId} {
+      // Read: Member reads own logs, trainer reads assigned member logs, admins read all
+      allow read: if isSignedIn() && (
+        isMember(request.auth.uid) && resource.data.memberId == request.auth.uid ||
+        isTrainer(request.auth.uid) && resource.data.trainerId == request.auth.uid ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Create: Members create own logs, trainers create for assigned members, admins
+      allow create: if isSignedIn() && (
+        (isMember(request.auth.uid) && request.resource.data.memberId == request.auth.uid) ||
+        (isTrainer(request.auth.uid) && isAssignedTrainer(request.resource.data.memberId)) ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Update: Generally immutable, but admins can correct
+      allow update: if isSignedIn() && isAdmin(request.auth.uid);
+
+      // Delete: Only admins
+      allow delete: if isSignedIn() && isAdmin(request.auth.uid);
+    }
+
+    // ===========================================
+    // BRANCHES COLLECTION
+    // ===========================================
+    match /branches/{branchId} {
+      // Read: Authenticated users can read active branches, admins read all
+      allow read: if isSignedIn() && (
+        resource.data.isActive == true ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Create: Only admins
+      allow create: if isSignedIn() && isAdmin(request.auth.uid);
+
+      // Update: Only admins
+      allow update: if isSignedIn() && isAdmin(request.auth.uid);
+
+      // Delete: Only admins (soft delete via isActive preferred)
+      allow delete: if isSignedIn() && isAdmin(request.auth.uid);
+    }
+
+    // ===========================================
+    // MEMBER ASSIGNMENTS COLLECTION
+    // ===========================================
+    match /memberAssignments/{assignmentId} {
+      // Read: Member reads own history, trainer reads for assigned members, admins
+      allow read: if isSignedIn() && (
+        isMember(request.auth.uid) && resource.data.memberId == request.auth.uid ||
+        isTrainer(request.auth.uid) && resource.data.trainerId == request.auth.uid ||
+        isAdmin(request.auth.uid)
+      );
+
+      // Create: Only admins (system creates on transfer)
+      allow create: if isSignedIn() && isAdmin(request.auth.uid);
+
+      // Update: Generally immutable, admins only
+      allow update: if isSignedIn() && isAdmin(request.auth.uid);
+
+      // Delete: Only admins
+      allow delete: if isSignedIn() && isAdmin(request.auth.uid);
+    }
+
+    // ===========================================
+    // EXERCISES COLLECTION (Read-only for non-admins)
+    // ===========================================
+    match /exercises/{exerciseId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin(request.auth.uid);
+    }
+
+    // ===========================================
+    // CATCH-ALL: Deny all other access
+    // ===========================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

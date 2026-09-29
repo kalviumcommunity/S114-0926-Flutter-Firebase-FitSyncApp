@@ -89,7 +89,7 @@ class _MemberTransferScreenState extends ConsumerState<MemberTransferScreen> {
                     Text('New Trainer', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
-                      value: _selectedTrainerId,
+                      initialValue: _selectedTrainerId,
                       decoration: const InputDecoration(
                         labelText: 'Select Trainer',
                         border: OutlineInputBorder(),
@@ -106,7 +106,7 @@ class _MemberTransferScreenState extends ConsumerState<MemberTransferScreen> {
                     Text('New Branch', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
-                      value: _selectedBranchId,
+                      initialValue: _selectedBranchId,
                       decoration: const InputDecoration(
                         labelText: 'Select Branch',
                         border: OutlineInputBorder(),

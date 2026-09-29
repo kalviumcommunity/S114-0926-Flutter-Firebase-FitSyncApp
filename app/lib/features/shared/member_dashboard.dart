@@ -134,8 +134,8 @@ class _PlanCard extends StatelessWidget {
                   label: Text(plan.status.name.toUpperCase(),
                       style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
                   backgroundColor: plan.status == WorkoutPlanStatus.active
-                      ? Colors.green.withOpacity(0.1)
-                      : Colors.grey.withOpacity(0.1),
+                      ? Colors.green.withValues(alpha: 0.1)
+                      : Colors.grey.withValues(alpha: 0.1),
                   labelStyle: TextStyle(
                       color: plan.status == WorkoutPlanStatus.active ? Colors.green : Colors.grey),
                 ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/workout_plan.dart';
-import '../../models/user.dart';
 import '../../services/firestore_service.dart';
 
 class ExercisePickerBottomSheet extends ConsumerStatefulWidget {

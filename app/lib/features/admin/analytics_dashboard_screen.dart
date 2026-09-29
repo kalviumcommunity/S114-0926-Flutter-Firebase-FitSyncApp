@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../models/progress_log.dart';
 import '../../models/user.dart';
-import '../../models/workout_plan.dart';
 import '../../services/firestore_service.dart';
 
 class AnalyticsDashboardScreen extends ConsumerWidget {

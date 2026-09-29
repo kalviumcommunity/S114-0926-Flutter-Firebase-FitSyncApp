@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../models/workout_plan.dart';
 import '../../services/firestore_service.dart';
-import 'log_workout_screen.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final String planId;
